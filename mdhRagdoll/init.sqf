@@ -89,8 +89,12 @@ if (missionNameSpace getVariable ["pAiGetMoreDamageAtHit",0] == 99 OR missionNam
 										{
 											params ["_u", "_f", "_selection"];
 											sleep 0.1;
+											if (!alive _u) exitWith {};									  
 											_u addForce [_u vectorModelToWorld _f, _u selectionPosition _selection, true];
+											//[(str(time)+": addForce")] remoteExec ["systemChat"];
+											if (!alive _u) exitWith {};									  
 											sleep 3;
+											if (!alive _u) exitWith {};									  
 
 											if
 											(
@@ -101,25 +105,72 @@ if (missionNameSpace getVariable ["pAiGetMoreDamageAtHit",0] == 99 OR missionNam
 											{
 												if (0.2 > random 1) then // stay longer Unconscious
 												{
+													_w = "";
+													_t = primaryWeapon _u;
+													if (secondaryWeapon _u != "") then 
+													{
+														_w = "Weapon_Empty" createVehicle [500,500,500];
+														_u actionNow ["DropWeapon", _w, secondaryWeapon _u];
+														_p = getPosWorld _u;
+														_w setpos [(_p#0) + 0.3, _p#1, 0];
+													};
+													if (primaryWeapon _u != "") then 
+													{
+														_w = "Weapon_Empty" createVehicle [500,500,500];
+														_u actionNow ["DropWeapon", _w, primaryWeapon _u];
+														_p = getPosWorld _u;
+														_w setpos [_p#0, _p#1, 0];
+													};
 													sleep 10; 
 													sleep random 5;
-												};
+													if (!alive _u) exitWith {};
 			
+													if (alive _u && {_t != ""}) then
+													{
+														_u actionNow ["TakeWeapon", _w, _t];
+														_u selectWeapon primaryWeapon _u;
+													};
+												};
 												_u setUnconscious false;
 												sleep 5;
 												_u setVariable ["mdhEnemyDamageEhForceHit",false];
+												if (!alive _u) exitWith {};
 												_u playMove "AmovPknlMstpSrasWrflDnon";
+												_u selectWeapon primaryWeapon _u;
 											}
 											else
 											{
 												if (0.2 > random 1) then
 												{
+													_w = "";
+													_t = primaryWeapon _u;
+													if (secondaryWeapon _u != "") then 
+													{
+														_w = "Weapon_Empty" createVehicle [500,500,500];
+														_u actionNow ["DropWeapon", _w, secondaryWeapon _u];
+														_p = getPosWorld _u;
+														_w setpos [(_p#0) + 0.3, _p#1, 0];
+													};
+													if (primaryWeapon _u != "") then 
+													{
+														_w = "Weapon_Empty" createVehicle [500,500,500];
+														_u actionNow ["DropWeapon", _w, primaryWeapon _u];
+														_p = getPosWorld _u;
+														_w setpos [_p#0, _p#1, 0];
+													};
 													sleep 10; 
 													sleep random 5;
 													_u setUnconscious false;
+													if (alive _u && {_t != ""}) then
+													{
+														_u actionNow ["TakeWeapon", _w, _t];
+														_u selectWeapon primaryWeapon _u;
+													};
 													sleep 5;
 													_u setVariable ["mdhEnemyDamageEhForceHit",false];
+													if (!alive _u) exitWith {};
 													_u playMove "AmovPknlMstpSrasWrflDnon";
+													_u selectWeapon primaryWeapon _u;
 												}
 												else
 												{
@@ -127,6 +178,20 @@ if (missionNameSpace getVariable ["pAiGetMoreDamageAtHit",0] == 99 OR missionNam
 													_u setvariable ["bis_nocoreconversations",true];											
 													_u disableAI "FSM";
 													_u disableAI "RADIOPROTOCOL";
+													if (secondaryWeapon _u != "") then 
+													{
+														_w = "Weapon_Empty" createVehicle [500,500,500];
+														_u actionNow ["DropWeapon", _w, secondaryWeapon _u];
+														_p = getPosWorld _u;
+														_w setpos [(_p#0) + 0.3, _p#1, 0];
+													};
+													if (primaryWeapon _u != "") then 
+													{
+														_w = "Weapon_Empty" createVehicle [500,500,500];
+														_u actionNow ["DropWeapon", _w, primaryWeapon _u];
+														_p = getPosWorld _u;
+														_w setpos [_p#0, _p#1, 0];
+													};
 													sleep 120;
 													sleep random 180;
 													_u setDamage 1;
