@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// MDH RAGDOLL AI UNITS GET MORE DAMAGE AT HIT & AI UNITS GET RAGDOLL EFFECT AT HIT(by Moerderhoschi) - v2025-03-20
+// MDH RAGDOLL AI UNITS GET MORE DAMAGE AT HIT & AI UNITS GET RAGDOLL EFFECT AT HIT(by Moerderhoschi) - v2025-04-14
 // github: https://github.com/Moerderhoschi/arma3_mdhRagdoll
 // steam mod version: https://steamcommunity.com/sharedfiles/filedetails/?id=3387437564
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,11 +64,9 @@ if (missionNameSpace getVariable ["pAiGetMoreDamageAtHit",0] == 99 OR missionNam
 		{
 			_mdhFnc =
 			{
-				//systemChat ("Ragdoll start");
 				{
 					if (local _x && {alive _x} && {(_x getVariable ["mdhEnemyDamageEhForceSet",-1]) == -1} && {!(_x in allPlayers)}) then
 					{
-						//systemChat ("Ragdoll added to "+str(_x));
 						_x setVariable ["mdhEnemyDamageEhForceSet",
 						_x addEventHandler ["HandleDamage",
 						{
@@ -76,25 +74,19 @@ if (missionNameSpace getVariable ["pAiGetMoreDamageAtHit",0] == 99 OR missionNam
 							if (missionNameSpace getVariable ["pAiRagdollAtHit",99] == 99) then
 							{
 								_u = _unit;
-								_s = _source;
-								_v = getPosASL _s vectorFromTo getPosASL _u;
-								_f = [(_v#0) * 1, (_v#1) * 1, 0];
-				
 								if (_selection == "body" && {vehicle _u == _u} && {_directHit} && {lifeState _u != "INCAPACITATED"} && {alive _u}) then
 								{
 									if (!(_u getVariable ["mdhEnemyDamageEhForceHit",false])) then
 									{
 										_u setVariable ["mdhEnemyDamageEhForceHit",true];
-										[_u, _f, _selection] spawn
+										[_u] spawn
 										{
-											params ["_u", "_f", "_selection"];
-											sleep 0.1;
-											if (!alive _u) exitWith {};									  
-											_u addForce [_u vectorModelToWorld _f, _u selectionPosition _selection, true];
-											//[(str(time)+": addForce")] remoteExec ["systemChat"];
-											if (!alive _u) exitWith {};									  
+											params ["_u"];
+											if (!alive _u) exitWith {};
+											_u addForce [[0,0,0], [0,0,0], false]; // reduce warping on ground
 											sleep 3;
-											if (!alive _u) exitWith {};									  
+											if (!alive _u) exitWith {};
+											_u setUnconscious true;
 
 											if
 											(
@@ -215,7 +207,6 @@ if (missionNameSpace getVariable ["pAiGetMoreDamageAtHit",0] == 99 OR missionNam
 						}]];
 					};
 				} forEach allUnits;
-				//systemChat ("Ragdoll End");
 			};
 		};
 
